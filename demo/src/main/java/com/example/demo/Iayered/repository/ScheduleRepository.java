@@ -1,7 +1,7 @@
-package com.example.Iayered.repository;
+package com.example.demo.Iayered.repository;
 
-import com.example.Iayered.dto.ScheduleResponseDto;
-import com.example.Iayered.entity.Schedule;
+import com.example.demo.Iayered.dto.ScheduleResponseDto;
+import com.example.demo.Iayered.entity.Schedule;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,6 +1,6 @@
-package com.example.Iayered.dto;
+package com.example.demo.Iayered.dto;
 
-import com.example.Iayered.entity.Schedule;
+import com.example.demo.Iayered.entity.Schedule;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -12,7 +12,7 @@ public class ScheduleResponseDto {
     private String content;
     private String title;
     private LocalDateTime creation;
-    private LocalDateTime reision;
+    private LocalDateTime revision;
 
     public ScheduleResponseDto(Schedule schedule){
         this.id = schedule.getId();
@@ -20,6 +20,6 @@ public class ScheduleResponseDto {
         this.content = schedule.getContent();
         this.title = schedule.getTitle();
         this.creation = schedule.getCreation();
-        this.reision = schedule.getReision();
+        this.revision = schedule.getRevision();
     }
 }

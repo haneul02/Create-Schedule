@@ -1,4 +1,4 @@
-package com.example.Iayered.entity;
+package com.example.demo.Iayered.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,16 +19,16 @@ public class Schedule {
     private String content;             // 제목
     private String title;               // 내용
     private LocalDateTime creation;     // 저장 시간
-    private LocalDateTime reision;      // 수정 시간
+    private LocalDateTime revision;      // 수정 시간
 
-    public Schedule(Long id, String name, String password, String content, String title, LocalDateTime creation, LocalDateTime reision ){
+    public Schedule(Long id, String name, String password, String content, String title, LocalDateTime creation, LocalDateTime revision ){
         this.id = id;
         this.name = name;
         this.password = password;
         this.content = content;
         this.title = title;
         this.creation = LocalDateTime.now();
-        this.reision = LocalDateTime.now();
+        this.revision = LocalDateTime.now();
     }
 
     public Schedule(String name, String password, String content, String title){
@@ -37,7 +37,7 @@ public class Schedule {
         this.content = content;
         this.title = title;
         this.creation = LocalDateTime.now();
-        this.reision = LocalDateTime.now();
+        this.revision = LocalDateTime.now();
     }
 
     private String nowDate(){

@@ -1,8 +1,8 @@
-package com.example.Iayered.controller;
+package com.example.demo.Iayered.controller;
 
-import com.example.Iayered.dto.ScheduleRequestDto;
-import com.example.Iayered.dto.ScheduleResponseDto;
-import com.example.Iayered.service.ScheduleService;
+import com.example.demo.Iayered.dto.ScheduleRequestDto;
+import com.example.demo.Iayered.dto.ScheduleResponseDto;
+import com.example.demo.Iayered.service.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -49,26 +49,34 @@ public class ScheduleController {
         return scheduleService.getScheduleById(id);
     }
 
-    // 일정 전체 수정 (제목 + 내용)
+    // 일정 전체 수정 (제목 + 내용 + 비밀번호)
     @PutMapping("/{id}")
     public ScheduleResponseDto updateSchedule(@PathVariable Long id,
                                               @RequestBody ScheduleRequestDto requestDto) {
-        return scheduleService.updateSchedule(id,
+        return scheduleService.updateSchedule(
+                id,
                 requestDto.getTitle(),
-                requestDto.getContent());
+                requestDto.getContent(),
+                requestDto.getPassword()
+        );
     }
 
-    // 일정 제목만 수정
+    // 일정 제목만 수정 (제목 + 비밀번호)
     @PatchMapping("/{id}/title")
     public ScheduleResponseDto updateScheduleTitle(@PathVariable Long id,
-                                                   @RequestBody String title) {
-        return scheduleService.updateTitle(id, title, null);
+                                                   @RequestBody ScheduleRequestDto requestDto) {
+        return scheduleService.updateTitle(
+                id,
+                requestDto.getTitle(),
+                requestDto.getPassword()
+        );
     }
 
-    // 일정 삭제
+    // 일정 삭제 (id + 비밀번호)
     @DeleteMapping("/{id}/delete")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteSchedule(@PathVariable Long id) {
-        scheduleService.deleteSchedule(id);
+    public void deleteSchedule(@PathVariable Long id,
+                               @RequestBody ScheduleRequestDto requestDto) {
+        scheduleService.deleteSchedule(id, requestDto.getPassword());
     }
 }

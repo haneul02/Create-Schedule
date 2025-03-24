@@ -1,4 +1,4 @@
-package com.example.Iayered.dto;
+package com.example.demo.Iayered.dto;
 
 import lombok.Getter;
 

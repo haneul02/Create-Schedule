@@ -1,6 +1,6 @@
-package com.example.Iayered.service;
+package com.example.demo.Iayered.service;
 
-import com.example.Iayered.dto.ScheduleResponseDto;
+import com.example.demo.Iayered.dto.ScheduleResponseDto;
 
 import java.util.List;
 
@@ -16,11 +16,11 @@ public interface ScheduleService {
     ScheduleResponseDto getScheduleById(Long id);
 
     // 일정 수정
-    ScheduleResponseDto updateSchedule(Long id, String title, String content);
+    ScheduleResponseDto updateSchedule(Long id, String title, String content, String password);
 
     // 일정 제목만 수정
-    ScheduleResponseDto updateTitle(Long id, String title, String content);
+    ScheduleResponseDto updateTitle(Long id, String title, String password);
 
     // 일정 삭제
-    void deleteSchedule(Long id);
+    void deleteSchedule(Long id, String password);
 }

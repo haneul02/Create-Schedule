@@ -1,7 +1,7 @@
-package com.example.Iayered.repository;
+package com.example.demo.Iayered.repository;
 
-import com.example.Iayered.dto.ScheduleResponseDto;
-import com.example.Iayered.entity.Schedule;
+import com.example.demo.Iayered.dto.ScheduleResponseDto;
+import com.example.demo.Iayered.entity.Schedule;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -23,14 +23,14 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository{ // al
     // 일정 저장
     @Override
     public ScheduleResponseDto saveSchedule(Schedule schedule) {
-        String sql = "INSERT INTO schedule(name, title, content, password, creation, reision) VALUES(?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO schedule(name, title, content, password, creation, revision) VALUES(?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql,
                 schedule.getName(),
                 schedule.getTitle(),
                 schedule.getContent(),
                 schedule.getPassword(),
                 schedule.getCreation(),
-                schedule.getReision()
+                schedule.getRevision()
         );
 
         String selectSql = "SELECT * FROM schedule WHERE id = LAST_INSERT_ID()";
@@ -67,16 +67,16 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository{ // al
                 rs.getString("content"),
                 rs.getString("title"),
                 rs.getTimestamp("creation").toLocalDateTime(),
-                rs.getTimestamp("reision").toLocalDateTime()
+                rs.getTimestamp("revision").toLocalDateTime()
         );
     }
 
     // 내용 전체 수정
     @Override
     public int updateSchedule(Long id, String title, String contents) {
-        String now = java.time.LocalDate.now().toString();
+        String now = java.time.LocalDateTime.now().toString();
         return jdbcTemplate.update(
-                "UPDATE schedule SET title = ?, content = ?, reision = ? WHERE id = ?",
+                "UPDATE schedule SET title = ?, content = ?, revision = ? WHERE id = ?",
                 title, contents, now, id
         );
     }
@@ -84,9 +84,9 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository{ // al
     // 제목 수정
     @Override
     public int updateTitle(Long id, String title) {
-        String now = java.time.LocalDate.now().toString();
+        String now = java.time.LocalDateTime.now().toString();
         return jdbcTemplate.update(
-                "UPDATE schedule SET title = ?, reision = ? WHERE id = ?",
+                "UPDATE schedule SET title = ?, revision = ? WHERE id = ?",
                 title, now, id
         );
     }
