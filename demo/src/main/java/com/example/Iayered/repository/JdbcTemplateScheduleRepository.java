@@ -23,8 +23,8 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository{ // al
     // 일정 저장
     @Override
     public ScheduleResponseDto saveSchedule(Schedule schedule) {
-        String sql = "INSERT INTO schedule(title, content) VALUES(?, ?)";
-        jdbcTemplate.update(sql, schedule.getTitle(), schedule.getContent());
+        String sql = "INSERT INTO schedule(name, title, content, password) VALUES(?, ?, ?, ?)";
+        jdbcTemplate.update(sql, schedule.getName(), schedule.getTitle(), schedule.getContent(), schedule.getPassword());
 
         // 방금 저장한 데이터 다시 조회
         String selectSql = "SELECT * FROM schedule WHERE id = LAST_INSERT_ID()";
@@ -56,8 +56,12 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository{ // al
     private RowMapper<Schedule> scheduleRowMapper() {
         return (rs, rowNum) -> new Schedule(
                 rs.getLong("id"),
+                rs.getString("name"),
+                rs.getString("password"),
+                rs.getString("content"),
                 rs.getString("title"),
-                rs.getString("content")
+                rs.getTimestamp("creation").toLocalDateTime(),
+                rs.getTimestamp("reision").toLocalDateTime()
         );
     }
 

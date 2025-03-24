@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,6 +20,33 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Autowired
     public ScheduleServiceImpl(ScheduleRepository scheduleRepository){
         this.scheduleRepository = scheduleRepository;
+    }
+
+    @Transactional
+    @Override
+    public ScheduleResponseDto createSchedule(String name, String password, String content, String title){
+        if (name == null || password == null || content == null || title == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "All fields are required.");
+        }
+
+        Schedule schedule = new Schedule(name, password, content, title);
+        return scheduleRepository.saveSchedule(schedule);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<ScheduleResponseDto> getAllSchedules() {
+        return scheduleRepository.findAllSchedules();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public ScheduleResponseDto getScheduleById(Long id) {
+        Optional<Schedule> schedule = scheduleRepository.findScheduleById(id);
+        if (schedule.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Schedule not found with id: " + id);
+        }
+        return new ScheduleResponseDto(schedule.get());
     }
 
     @Transactional

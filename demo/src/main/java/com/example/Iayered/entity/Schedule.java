@@ -8,42 +8,35 @@ import org.springframework.data.annotation.Id;
 import java.time.LocalDateTime;
 
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
 
 public class Schedule {
 
 
     private Long id;
-    private String name;
-    private String password;
-    private String content;
-    private String title;
-    private LocalDateTime creation;
-    private LocalDateTime reision;
+    private String name;                // 작성자
+    private String password;            // 비밀번호
+    private String content;             // 제목
+    private String title;               // 내용
+    private LocalDateTime creation;     // 저장 시간
+    private LocalDateTime reision;      // 수정 시간
 
-    public Schedule(String name, String password){
+    public Schedule(Long id, String name, String password, String content, String title, LocalDateTime creation, LocalDateTime reision ){
+        this.id = id;
         this.name = name;
         this.password = password;
+        this.content = content;
+        this.title = title;
         this.creation = LocalDateTime.now();
         this.reision = LocalDateTime.now();
     }
 
-    public void update(String title, String content){
-        this.title = title;
+    public Schedule(String name, String password, String content, String title){
+        this.name = name;
+        this.password = password;
         this.content = content;
+        this.title = title;
+        this.creation = LocalDateTime.now();
         this.reision = LocalDateTime.now();
     }
-
-    public Schedule(Long id, String title, String content) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
-    }
-
-    public void update(String title) {
-        this.title = title;
-        this.reision = LocalDateTime.now();
-    }
-
 }
