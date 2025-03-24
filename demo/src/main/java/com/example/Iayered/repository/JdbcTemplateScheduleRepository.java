@@ -23,10 +23,16 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository{ // al
     // 일정 저장
     @Override
     public ScheduleResponseDto saveSchedule(Schedule schedule) {
-        String sql = "INSERT INTO schedule(name, title, content, password) VALUES(?, ?, ?, ?)";
-        jdbcTemplate.update(sql, schedule.getName(), schedule.getTitle(), schedule.getContent(), schedule.getPassword());
+        String sql = "INSERT INTO schedule(name, title, content, password, creation, reision) VALUES(?, ?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql,
+                schedule.getName(),
+                schedule.getTitle(),
+                schedule.getContent(),
+                schedule.getPassword(),
+                schedule.getCreation(),
+                schedule.getReision()
+        );
 
-        // 방금 저장한 데이터 다시 조회
         String selectSql = "SELECT * FROM schedule WHERE id = LAST_INSERT_ID()";
         Schedule savedSchedule = jdbcTemplate.queryForObject(selectSql, scheduleRowMapper());
 
@@ -67,14 +73,22 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository{ // al
 
     // 내용 전체 수정
     @Override
-    public int updateSchedule(Long id, String title, String contents){
-        return jdbcTemplate.update("update schedule set title = ?, content = ? where id = ?", title, contents, id);
+    public int updateSchedule(Long id, String title, String contents) {
+        String now = java.time.LocalDate.now().toString();
+        return jdbcTemplate.update(
+                "UPDATE schedule SET title = ?, content = ?, reision = ? WHERE id = ?",
+                title, contents, now, id
+        );
     }
 
     // 제목 수정
     @Override
-    public int updateTitle(Long id, String title){
-        return jdbcTemplate.update("update schedule set title = ? where id = ?", title, id);
+    public int updateTitle(Long id, String title) {
+        String now = java.time.LocalDate.now().toString();
+        return jdbcTemplate.update(
+                "UPDATE schedule SET title = ?, reision = ? WHERE id = ?",
+                title, now, id
+        );
     }
 
     // 일정 삭제

@@ -39,4 +39,8 @@ public class Schedule {
         this.creation = LocalDateTime.now();
         this.reision = LocalDateTime.now();
     }
+
+    private String nowDate(){
+        return java.time.LocalDate.now().toString();
+    }
 }

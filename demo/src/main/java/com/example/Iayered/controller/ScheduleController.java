@@ -1,5 +1,6 @@
 package com.example.Iayered.controller;
 
+import com.example.Iayered.dto.ScheduleRequestDto;
 import com.example.Iayered.dto.ScheduleResponseDto;
 import com.example.Iayered.service.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,17 +21,24 @@ public class ScheduleController {
     }
 
     // 일정 등록
-    @PostMapping("/")
+    @PostMapping("/new")
     @ResponseStatus(HttpStatus.CREATED)
-    public ScheduleResponseDto createSchedule(@RequestParam String name,
-                                              @RequestParam String password,
-                                              @RequestParam String content,
-                                              @RequestParam String title) {
-        return scheduleService.createSchedule(name, password, content, title);
+    public ScheduleResponseDto createSchedule(@RequestBody ScheduleRequestDto requestDto) {
+        System.out.println("name = " + requestDto.getName());
+        System.out.println("password = " + requestDto.getPassword());
+        System.out.println("content = " + requestDto.getContent());
+        System.out.println("title = " + requestDto.getTitle());
+
+        return scheduleService.createSchedule(
+                requestDto.getName(),
+                requestDto.getPassword(),
+                requestDto.getContent(),
+                requestDto.getTitle()
+        );
     }
 
     // 전체 일정 조회
-    @GetMapping("/")
+    @GetMapping("/all")
     public List<ScheduleResponseDto> getAllSchedules() {
         return scheduleService.getAllSchedules();
     }
@@ -44,15 +52,16 @@ public class ScheduleController {
     // 일정 전체 수정 (제목 + 내용)
     @PutMapping("/{id}")
     public ScheduleResponseDto updateSchedule(@PathVariable Long id,
-                                              @RequestParam String title,
-                                              @RequestParam String content) {
-        return scheduleService.updateSchedule(id, title, content);
+                                              @RequestBody ScheduleRequestDto requestDto) {
+        return scheduleService.updateSchedule(id,
+                requestDto.getTitle(),
+                requestDto.getContent());
     }
 
     // 일정 제목만 수정
     @PatchMapping("/{id}/title")
     public ScheduleResponseDto updateScheduleTitle(@PathVariable Long id,
-                                                   @RequestParam String title) {
+                                                   @RequestBody String title) {
         return scheduleService.updateTitle(id, title, null);
     }
 
