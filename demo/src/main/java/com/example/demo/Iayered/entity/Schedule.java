@@ -15,15 +15,17 @@ public class Schedule {
 
     private Long id;
     private String name;                // 작성자
+    private String email;               // 이메일
     private String password;            // 비밀번호
     private String content;             // 제목
     private String title;               // 내용
     private LocalDateTime creation;     // 저장 시간
     private LocalDateTime revision;      // 수정 시간
 
-    public Schedule(Long id, String name, String password, String content, String title, LocalDateTime creation, LocalDateTime revision ){
+    public Schedule(Long id, String name, String email, String password, String content, String title, LocalDateTime creation, LocalDateTime revision ){
         this.id = id;
         this.name = name;
+        this.email = email;
         this.password = password;
         this.content = content;
         this.title = title;

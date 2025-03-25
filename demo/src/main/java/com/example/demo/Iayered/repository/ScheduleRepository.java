@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface ScheduleRepository {
     ScheduleResponseDto saveSchedule(Schedule schedule);
-    List<ScheduleResponseDto> findAllSchedules();
+    List<ScheduleResponseDto> findAllSchedules(String email);
     Optional<Schedule> findScheduleById(Long id);
     int updateSchedule(Long id, String title, String content);
     int updateTitle(Long id, String title);

@@ -1,5 +1,6 @@
 package com.example.demo.Iayered.repository;
 
+import com.example.demo.Iayered.dto.ScheduleRequestDto;
 import com.example.demo.Iayered.dto.ScheduleResponseDto;
 import com.example.demo.Iayered.entity.Schedule;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,6 +19,17 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository{ // al
     // 생성자
     public JdbcTemplateScheduleRepository(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+    }
+
+    @Override
+    public ScheduleRequestDto findUser(Schedule schedule){
+        String sql = "INSERT INTO user(name,email, password, creation, revison) VALUES(?,?,?,?,?) ";
+        jdbcTemplate.update(sql, schedule.getName(),schedule.getEmail(), schedule.getPassword(), schedule.getCreation(), schedule.getRevision() );
+
+        String selectSql = "SELECT * FROM user WHERE id = LAST_INSERT_ID()";
+        Schedule savedUser = jdbcTemplate.queryForObject(selectSql, userRowMapper());
+
+        return new ScheduleRequestDto(savedUser);
     }
 
     // 일정 저장
@@ -41,9 +53,9 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository{ // al
 
     // 전체 일정 조회
     @Override
-    public List<ScheduleResponseDto> findAllSchedules() {
-        String sql = "SELECT * FROM schedule";
-        List<Schedule> schedules = jdbcTemplate.query(sql, scheduleRowMapper());
+    public List<ScheduleResponseDto> findAllSchedules(String email) {
+        String sql = "SELECT s.id, s.content, s.title,s.creation, s.revision, u.name, s.userid, u.email FROM schedule s join user u on s.userid = id";
+        List<Schedule> schedules = jdbcTemplate.query(sql, scheduleRowMapper(), email);
 
         return schedules.stream()
                 .map(ScheduleResponseDto::new)
@@ -63,9 +75,21 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository{ // al
         return (rs, rowNum) -> new Schedule(
                 rs.getLong("id"),
                 rs.getString("name"),
+                rs.getString("email"),
                 rs.getString("password"),
                 rs.getString("content"),
                 rs.getString("title"),
+                rs.getTimestamp("creation").toLocalDateTime(),
+                rs.getTimestamp("revision").toLocalDateTime()
+        );
+    }
+
+    private RowMapper<User> userRowMapper() {
+        return (rs, rowNum) -> new User(
+                rs.getLong("id"),
+                rs.getString("name"),
+                rs.getString("email"),
+                rs.getString("password"),
                 rs.getTimestamp("creation").toLocalDateTime(),
                 rs.getTimestamp("revision").toLocalDateTime()
         );

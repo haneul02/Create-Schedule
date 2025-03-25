@@ -35,8 +35,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<ScheduleResponseDto> getAllSchedules() {
-        return scheduleRepository.findAllSchedules();
+    public List<ScheduleResponseDto> getAllSchedules(String email) {
+        return scheduleRepository.findAllSchedules(email);
     }
 
     @Transactional(readOnly = true)

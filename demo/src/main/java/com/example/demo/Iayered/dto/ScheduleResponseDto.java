@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Getter
 public class ScheduleResponseDto {
     private Long id;
+    private String email;
     private String name;
     private String content;
     private String title;
@@ -16,6 +17,7 @@ public class ScheduleResponseDto {
 
     public ScheduleResponseDto(Schedule schedule){
         this.id = schedule.getId();
+        this.email = schedule.getEmail();
         this.name = schedule.getName();
         this.content = schedule.getContent();
         this.title = schedule.getTitle();
