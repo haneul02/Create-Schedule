@@ -35,8 +35,8 @@ public class ScheduleController {
 
     // 전체 일정 조회
     @GetMapping("/all")
-    public List<ScheduleResponseDto> getAllSchedules() {
-        return scheduleService.getAllSchedules();
+    public List<ScheduleResponseDto> getAllSchedules(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        return scheduleService.getAllSchedules(page, size);
     }
 
     // 특정 일정 조회

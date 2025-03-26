@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 @Getter
 public class ScheduleResponseDto {
+
     private Long id;
     private String email;
     private String name;
@@ -24,5 +25,5 @@ public class ScheduleResponseDto {
         this.creation = schedule.getCreation();
         this.revision = schedule.getRevision();
     }
-    
+
 }

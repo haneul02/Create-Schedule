@@ -4,6 +4,8 @@ import com.example.demo.Iayered.dto.ScheduleRequestDto;
 import com.example.demo.Iayered.dto.ScheduleResponseDto;
 import com.example.demo.Iayered.dto.UserDto;
 import com.example.demo.Iayered.entity.Schedule;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.relational.core.sql.In;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -82,9 +84,9 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository{ // al
 
     // 전체 일정 조회
     @Override
-    public List<ScheduleResponseDto> findAllSchedules() {
-        String sql = "SELECT s.id, s.content, s.title,s.creation, s.revision, u.name, s.userid, u.email FROM schedule s join user u on s.userid = u.id";
-        List<Schedule> schedules = jdbcTemplate.query(sql, scheduleRowMapper());
+    public List<ScheduleResponseDto> findAllSchedules(int page, int size) {
+        String sql = "SELECT s.id, s.content, s.title,s.creation, s.revision, u.name, s.userid, u.email FROM schedule s join user u on s.userid = u.id order by s.creation desc limit ? offset ?";
+        List<Schedule> schedules = jdbcTemplate.query(sql, scheduleRowMapper(), size, page * size);
 
         return schedules.stream()
                 .map(ScheduleResponseDto::new)
@@ -163,4 +165,5 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository{ // al
     public int deleteSchedule(Long id) {
         return jdbcTemplate.update("DELETE FROM schedule WHERE id = ?", id);
     }
+
 }
