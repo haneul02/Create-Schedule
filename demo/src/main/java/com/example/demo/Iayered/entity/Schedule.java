@@ -22,11 +22,10 @@ public class Schedule {
     private LocalDateTime creation;     // 저장 시간
     private LocalDateTime revision;      // 수정 시간
 
-    public Schedule(Long id, String name, String email, String password, String content, String title, LocalDateTime creation, LocalDateTime revision ){
+    public Schedule(Long id, String name, String email, String content, String title, LocalDateTime creation, LocalDateTime revision ){
         this.id = id;
         this.name = name;
         this.email = email;
-        this.password = password;
         this.content = content;
         this.title = title;
         this.creation = LocalDateTime.now();

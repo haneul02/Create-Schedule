@@ -24,4 +24,5 @@ public class ScheduleResponseDto {
         this.creation = schedule.getCreation();
         this.revision = schedule.getRevision();
     }
+    
 }

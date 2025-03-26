@@ -23,18 +23,14 @@ public class ScheduleController {
     // 일정 등록
     @PostMapping("/new")
     @ResponseStatus(HttpStatus.CREATED)
-    public ScheduleResponseDto createSchedule(@RequestBody ScheduleRequestDto requestDto) {
+    public void createSchedule(@RequestBody ScheduleRequestDto requestDto) {
         System.out.println("name = " + requestDto.getName());
+        System.out.println("email = " + requestDto.getEmail());
         System.out.println("password = " + requestDto.getPassword());
         System.out.println("content = " + requestDto.getContent());
         System.out.println("title = " + requestDto.getTitle());
 
-        return scheduleService.createSchedule(
-                requestDto.getName(),
-                requestDto.getPassword(),
-                requestDto.getContent(),
-                requestDto.getTitle()
-        );
+        scheduleService.createSchedule(requestDto);
     }
 
     // 전체 일정 조회
@@ -57,18 +53,24 @@ public class ScheduleController {
                 id,
                 requestDto.getTitle(),
                 requestDto.getContent(),
-                requestDto.getPassword()
+                requestDto.getPassword(),
+                requestDto.getEmail()
         );
     }
 
     // 일정 제목만 수정 (제목 + 비밀번호)
-    @PatchMapping("/{id}/title")
+    @PutMapping("/{id}/title")
     public ScheduleResponseDto updateScheduleTitle(@PathVariable Long id,
-                                                   @RequestBody ScheduleRequestDto requestDto) {
+                                                     @RequestBody ScheduleRequestDto requestDto) {
+        System.out.println("email = " + requestDto.getEmail());
+        System.out.println("password = " + requestDto.getPassword());
+        System.out.println("title = " + requestDto.getTitle());
+
         return scheduleService.updateTitle(
                 id,
                 requestDto.getTitle(),
-                requestDto.getPassword()
+                requestDto.getPassword(),
+                requestDto.getEmail()
         );
     }
 
@@ -77,6 +79,6 @@ public class ScheduleController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteSchedule(@PathVariable Long id,
                                @RequestBody ScheduleRequestDto requestDto) {
-        scheduleService.deleteSchedule(id, requestDto.getPassword());
+        scheduleService.deleteSchedule(id, requestDto.getPassword(), requestDto.getEmail());
     }
 }

@@ -1,6 +1,8 @@
 package com.example.demo.Iayered.service;
 
+import com.example.demo.Iayered.dto.ScheduleRequestDto;
 import com.example.demo.Iayered.dto.ScheduleResponseDto;
+import com.example.demo.Iayered.dto.UserDto;
 import com.example.demo.Iayered.entity.Schedule;
 import com.example.demo.Iayered.repository.ScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,23 +24,25 @@ public class ScheduleServiceImpl implements ScheduleService {
         this.scheduleRepository = scheduleRepository;
     }
 
+    // 일정 저장
     @Transactional
     @Override
-    public ScheduleResponseDto createSchedule(String name, String password, String content, String title){
-        if (name == null || password == null || content == null || title == null) {
+    public void createSchedule(ScheduleRequestDto requestDto){
+        if (requestDto.getName() == null || requestDto.getPassword() == null || requestDto.getContent() == null || requestDto.getTitle() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "All fields are required.");
         }
 
-        Schedule schedule = new Schedule(name, password, content, title);
-        return scheduleRepository.saveSchedule(schedule);
+        scheduleRepository.saveSchedule(requestDto);
     }
 
+    // 전체 일정 조회
     @Transactional(readOnly = true)
     @Override
-    public List<ScheduleResponseDto> getAllSchedules(String email) {
-        return scheduleRepository.findAllSchedules(email);
+    public List<ScheduleResponseDto> getAllSchedules() {
+        return scheduleRepository.findAllSchedules();
     }
 
+    // 단일 일정 조회
     @Transactional(readOnly = true)
     @Override
     public ScheduleResponseDto getScheduleById(Long id) {
@@ -49,25 +53,24 @@ public class ScheduleServiceImpl implements ScheduleService {
         return new ScheduleResponseDto(schedule.get());
     }
 
+    // password, email이 맞아야 제목, 내용 수정 가능
     @Transactional
     @Override
-    public ScheduleResponseDto updateSchedule(Long id, String title, String content, String password){
+    public ScheduleResponseDto updateSchedule(Long id, String title, String content, String password, String email){
 
         if(title == null || content == null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The title and content are required values. ");
         }
 
-        // 스케줄 조회
-        Schedule schedule = scheduleRepository.findScheduleById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Schedule not found with id: " + id));
+        UserDto userdto = scheduleRepository.findEmailAndPassword(id);
 
         // 비밀번호 검증
-        if (!schedule.getPassword().equals(password)) {
+        if (!(userdto.getEmail().equals(email) && userdto.getPassword().equals(password))) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Incorrect password.");
         }
-
         // 내용 수정
         int updatedRow = scheduleRepository.updateSchedule(id, title, content);
+        
         // 수정된 row가 0개 라면
         if (updatedRow == 0){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No data has been modified");
@@ -77,9 +80,10 @@ public class ScheduleServiceImpl implements ScheduleService {
         return new ScheduleResponseDto(scheduleRepository.findScheduleById(id).get());
     }
 
+    // 제목만 수정
     @Transactional
     @Override
-    public ScheduleResponseDto updateTitle(Long id, String title, String password){
+    public ScheduleResponseDto updateTitle(Long id, String title, String password, String email){
         if(title == null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The title is a required value.");
         }
@@ -88,9 +92,11 @@ public class ScheduleServiceImpl implements ScheduleService {
         Schedule schedule = scheduleRepository.findScheduleById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Schedule not found with id: " + id));
 
+        UserDto userdto = scheduleRepository.findEmailAndPassword(id);
+
         // 비밀번호 검증
-        if (!schedule.getPassword().equals(password)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Incorrect password.");
+        if (!(userdto.getEmail().equals(email) && userdto.getPassword().equals(password))) {
+           throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Incorrect password.");
         }
 
         // memo 제목 수정
@@ -103,14 +109,18 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
 
+    // 일정 삭제
+    @Transactional
     @Override
-    public void deleteSchedule(Long id, String password){
+    public void deleteSchedule(Long id, String password, String email){
         // 스케줄 조회
         Schedule schedule = scheduleRepository.findScheduleById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Schedule not found with id: " + id));
 
+        UserDto userdto = scheduleRepository.findEmailAndPassword(id);
+
         // 비밀번호 검증
-        if (!schedule.getPassword().equals(password)) {
+        if (!(userdto.getEmail().equals(email) && userdto.getPassword().equals(password))) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Incorrect password.");
         }
         int deletedRow = scheduleRepository.deleteSchedule(id);
